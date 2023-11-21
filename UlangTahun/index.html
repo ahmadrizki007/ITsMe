@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        #game-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 50px auto;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        #word-display {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #hint {
+            font-style: italic;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        #guess-input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            text-transform: uppercase;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>TEBAK TEBAKAN YUK</h1>
+        <p>Silakan tebak kata yang terkait dengan hewan:</p>
+        <div id="hint"></div>
+        <div id="word-display"></div>
+        <input type="text" id="guess-input" placeholder="Tebak huruf">
+        <button onclick="checkGuess()">Periksa</button>
+    </div>
+
+    <script>
+        var animals = [
+            { name: "GAJAH", description: "GEDE dan KUAT" },
+            { name: "SINGA", description: "FAKBOI dan GAGAH" },
+            { name: "JERAPAH", description: "PANJANG" },
+            { name: "HARIMAU", description: "SANGAR dan MANADO (manaajadoyan)" },
+            { name: "KANGURU", description: "IBU HAMIL" },
+            { name: "KUCING", description: "kunti bogel" },
+            { name: "KOALA", description: "pengangguran" }
+        ];
+
+        var selectedAnimal = animals[Math.floor(Math.random() * animals.length)];
+        var displayWord = [];
+        var birthdayMessageShown = false;
+
+        function initializeGame() {
+            // Mengisi displayWord dengan underscore (_) untuk setiap huruf dalam kata terpilih
+            for (var i = 0; i < selectedAnimal.name.length; i++) {
+                if (selectedAnimal.name[i] === " ") {
+                    displayWord.push(" ");
+                } else {
+                    displayWord.push("_");
+                }
+            }
+
+            // Menampilkan hint dan kata tersembunyi pada layar
+            document.getElementById("hint").innerHTML = "Hint: " + selectedAnimal.description;
+            updateWordDisplay();
+        }
+
+        function updateWordDisplay() {
+            document.getElementById("word-display").innerHTML = displayWord.join(" ");
+        }
+
+        function checkGuess() {
+            var guess = document.getElementById("guess-input").value.toUpperCase();
+
+            if (guess.length === 1 && guess.match(/[A-Z]/)) {
+                // Memeriksa apakah huruf tebakan benar
+                var correctGuess = false;
+                for (var i = 0; i < selectedAnimal.name.length; i++) {
+                    if (selectedAnimal.name[i] === guess) {
+                        displayWord[i] = guess;
+                        correctGuess = true;
+                    }
+                }
+
+                // Menampilkan kata tersembunyi yang diperbarui
+                updateWordDisplay();
+
+                // Memeriksa apakah pemain telah menebak seluruh kata
+                if (!displayWord.includes("_") && !birthdayMessageShown) {
+                    displayBirthdayMessage();
+                    birthdayMessageShown = true;
+                }
+
+                // Memberi umpan balik tentang tebakan
+                if (correctGuess) {
+                    alert("Hore! Tebakan benar!");
+                } else {
+                    alert("Tebakan salah. Coba lagi!");
+                }
+            } else {
+                alert("Masukkan satu huruf yang valid.");
+            }
+
+            // Membersihkan input setelah menebak
+            document.getElementById("guess-input").value = "";
+        }
+
+        function displayBirthdayMessage() {
+            alert("Selamat Ulang Tahun, Jarabul! 🎉\n\n" +
+                  "Rawr! Panjang umurnya, jangan ceroboh lagi,\n" +
+                  "jangan suka ngamuk gajelas. Ingat, kalau salah,\n" +
+                  "dengerin kalau dinasehatin yang baik. Jangan\n" +
+                  "pala batu, jangan lupa makan. POKOKE MET ULTAH JARABUL!");
+        }
+
+        // Inisialisasi game saat halaman dimuat
+        window.onload = initializeGame;
+    </script>
+</body>
+</html>
